@@ -1,0 +1,79 @@
+package com.pavan.javafxapp;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class Controller implements Initializable {
+	@FXML
+	public Label welcomeLabel;
+	@FXML
+	public ChoiceBox<String> choiceBox;
+	@FXML
+	public TextField textField;
+	@FXML
+	public Button button;
+
+	private boolean isCtoF = true;
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+		choiceBox.getItems().add("Celsius to Fahrenheit");
+		choiceBox.getItems().add("Fahrenheit to Celsius");
+		choiceBox.setValue("Celsius to Fahrenheit");
+
+		choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.equals("Celsius to Fahrenheit")){
+				isCtoF = true;
+			}else {
+				isCtoF = false;
+			}
+		});
+
+		button.setOnAction(event -> {
+			convert();
+		});
+	}
+
+	private void convert() {
+		String input = textField.getText();
+		float entered=0.0f;
+		try {
+			entered = Float.parseFloat(input);
+		}catch (Exception e){
+			warn();
+			return;
+		}
+
+		float newTemp = 0.0f;
+		if(isCtoF){
+			newTemp = (entered*9/5)+32;
+		}
+		else{
+			newTemp = (entered-32)*5/9;
+		}
+		display(newTemp);
+	}
+
+	private void warn() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("ERROR");
+		alert.setContentText("enter valid value");
+		alert.show();
+	}
+
+	private void display(float newTemp) {
+		System.out.println(newTemp);
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Result");
+		alert.setContentText("new temp is "+newTemp);
+		alert.show();
+	}
+}

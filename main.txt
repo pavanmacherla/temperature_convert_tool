@@ -1,0 +1,92 @@
+package com.pavan.javafxapp;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.util.Optional;
+
+public class Main extends Application {
+	public static void main(String[] args){
+		System.out.println("main");
+		launch(args);
+	}
+
+	@Override
+	public void init() throws Exception {
+		System.out.println("Init");
+		super.init();
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		System.out.println("start");
+
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("app_layout.fxml"));
+		VBox rootNode = loader.load();  //Parent is Super class pane is sub class
+		MenuBar menuBar = createMenu();
+		rootNode.getChildren().add(0,menuBar);
+		Scene scene = new Scene(rootNode);
+
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Temperature Converter Tool");
+		primaryStage.setResizable(false);//for non resizeable
+		primaryStage.show();
+	}
+
+	private MenuBar createMenu(){
+		Menu fileMenu = new Menu("File");
+		MenuItem newMenuItem = new MenuItem("New");
+		newMenuItem.setOnAction(event -> System.out.println("new clicked"));
+
+		MenuItem quitMenuItem = new MenuItem("Quit");
+		quitMenuItem.setOnAction(event -> {
+			Platform.exit();//exit the platform or program
+			System.exit(0);//exit the virtual machine
+		});
+
+		SeparatorMenuItem separatorMenuItem = new SeparatorMenuItem();
+		fileMenu.getItems().addAll(newMenuItem,separatorMenuItem,quitMenuItem);
+
+		Menu helpMenu = new Menu("Help");
+		MenuItem aboutApp = new MenuItem("About");
+		aboutApp.setOnAction(event -> about());
+		helpMenu.getItems().addAll(aboutApp);
+
+		MenuBar menuBar = new MenuBar();
+		menuBar.getMenus().addAll(fileMenu,helpMenu);
+		return menuBar;
+	}
+
+	private void about() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("my 1st app");
+		alert.setHeaderText("learning");
+		alert.setContentText("noob turning to pro");
+
+		ButtonType yes = new ButtonType("Yes");
+		ButtonType no = new ButtonType("No");
+		alert.getButtonTypes().setAll(yes,no);
+		Optional<ButtonType> click = alert.showAndWait();//its just a container
+		if(click.isPresent() && click.get() == yes){
+
+		}
+		if(click.isPresent() && click.get()== no){
+
+		}
+	}
+
+	@Override
+	public void stop() throws Exception {
+		System.out.println("stop");
+		super.stop();
+	}
+}
+//lifecycle : init,start,stop
